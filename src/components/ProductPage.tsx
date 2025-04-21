@@ -1,9 +1,9 @@
 "use client"
 
-import productData from "../data/data.json"
 import Image from "next/image"
 import { BackgroundGradient } from "./ui/background-gradient"
 import { useRouter } from "next/navigation"
+import {useStore} from "@/context/StoreContext"
 
 
 interface Product {
@@ -18,9 +18,10 @@ interface Product {
 
 const ProductPage = () => {
     const router = useRouter()
+    const { products } = useStore()
     
-    const handle = () => {
-        router.push('/product')
+    const handle = (productId: number) => {
+        router.push(`/product/${productId}`)
     }
 
     return (
@@ -32,9 +33,9 @@ const ProductPage = () => {
                 </div>
             </div>
             <div className="mt-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center cursor-pointer " onClick={handle}>
-                    {productData.map((product: Product) => (
-                        <div key={product.id} className="flex justify-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+                    {products.map((product: Product) => (
+                        <div key={product.id} className="flex justify-center cursor-pointer" onClick={() => handle(product.id)}>
                             <div>
                                 <BackgroundGradient className="w-[320px] h-[500px] rounded-[22px] p-4 sm:p-6 bg-white dark:bg-zinc-900 flex flex-col justify-between">
                                     <Image
