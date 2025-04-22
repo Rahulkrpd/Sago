@@ -18,19 +18,16 @@ function Navbar({ className }: { className?: string }) {
 
                     </MenuItem>
                 </Link>
-                <Link href={'#products'}>
+                <Link href={'/cart'}>
                     <MenuItem setActive={setActive} active={active} item="Product">
-                        <div className="flex flex-col space-y-4 text-sm">
-                            <HoveredLink href="/product">Products</HoveredLink>
 
-                        </div>
                         <div className="flex flex-col space-y-4 text-sm">
                             {totalItems > 0 && (
                                 <span className="absolute top-0 right-0 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-xs text-white">
                                     {totalItems}
                                 </span>
                             )}
-                            <Link href="/cart">Cart</Link>
+                            <span >Cart</span>
 
                         </div>
                     </MenuItem>
