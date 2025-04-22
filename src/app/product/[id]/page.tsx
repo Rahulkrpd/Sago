@@ -16,13 +16,14 @@ async function getProduct(id: string): Promise<Product | null> {
         if (!res.ok) return null
         return res.json()
     } catch (error) {
+        console.log(error)
         return null
     }
 }
 
 export default async function ProductDetials({ params }: ProductPageProps) {
-
-    const product = await getProduct(params.id)
+    const id =  params.id
+    const product = await getProduct(id)
 
     if (!product) {
         return (
