@@ -3,13 +3,6 @@ import Image from 'next/image'
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card"
 import { Product } from "@/context/StoreContext"
 
-
-interface ProductPageProps {
-    params: {
-        id: string
-    }
-}
-
 async function getProduct(id: string): Promise<Product | null> {
     try {
         const res = await fetch(`https://fakestoreapi.com/products/${id}`)
@@ -21,15 +14,18 @@ async function getProduct(id: string): Promise<Product | null> {
     }
 }
 
-export default async function ProductDetials({ params }: ProductPageProps) {
-    const id =  params.id
-    const product = await getProduct(id)
+// ✅ Use built-in typing from Next.js App Router
+export default async function ProductDetails({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params; // Await the params Promise
 
+   
+
+    const product = await getProduct(id);
     if (!product) {
         return (
-            <>
-                product not found
-            </>
+            <div className="p-8 text-center text-red-500">
+                Product not found.
+            </div>
         )
     }
 
@@ -37,13 +33,12 @@ export default async function ProductDetials({ params }: ProductPageProps) {
         <div className="mt-10 px-4">
             <CardContainer className="inter-var">
                 <CardBody className="bg-white dark:bg-black border border-black/10 dark:border-white/20 rounded-2xl p-6 w-full max-w-6xl mx-auto">
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                         {/* Product Image */}
                         <CardItem translateZ="80" className="w-full">
                             <Image
                                 src={product.image}
-                                alt="test"
+                                alt={product.title}
                                 width={800}
                                 height={800}
                                 className="w-full h-[300px] sm:h-[400px] object-contain rounded-xl"
@@ -65,22 +60,16 @@ export default async function ProductDetials({ params }: ProductPageProps) {
                             </CardItem>
 
                             <CardItem translateZ="30" className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                                {
-                                    product.description
-                                } </CardItem>
+                                {product.description}
+                            </CardItem>
 
                             <CardItem translateZ="20" className="text-sm text-gray-500 mt-2">
-                                ⭐ {product.rating.rate} ({product.rating.count}reviews)
+                                ⭐ {product.rating.rate} ({product.rating.count} reviews)
                             </CardItem>
                         </div>
                     </div>
-
-                    {/* Action Buttons */}
-
                 </CardBody>
             </CardContainer>
         </div>
     )
 }
-
-
