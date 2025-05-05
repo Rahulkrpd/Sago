@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import {  Menu, MenuItem, } from "../components/ui/navbar-menu";
+import { Menu, MenuItem, } from "../components/ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 
@@ -13,34 +13,35 @@ function Navbar({ className }: { className?: string }) {
         <div className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}
         >
             <Menu setActive={setActive} >
-                <Link href={'/'}>
+                <Link href={'/home'}>
                     <MenuItem setActive={setActive} active={active} item="Home">
 
                     </MenuItem>
                 </Link>
-                <Link href={'/cart'}>
-                    <MenuItem setActive={setActive} active={active} item="Product">
 
-                        <div className="flex flex-col space-y-4 text-sm">
-                            {totalItems > 0 && (
-                                <span className="absolute top-0 right-0 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-xs text-white">
-                                    {totalItems}
-                                </span>
-                            )}
-                            <span >Cart</span>
-
-                        </div>
-                    </MenuItem>
-                </Link>
-                <Link href={'#footer'}>
+                <Link href={'/home/#footer'}>
                     <MenuItem setActive={setActive} active={active} item="About Us">
 
                     </MenuItem>
                 </Link>
+
                 <Link href={"/contact"}>
                     <MenuItem setActive={setActive} active={active} item="Contact Us">
 
                     </MenuItem>
+                </Link>
+
+                <Link href={'/cart'}>
+                    <div className="relative flex items-center">
+                        <MenuItem setActive={setActive} active={active} item="Cart" />
+                        {totalItems > 0 && (
+                            <span className="absolute -top-2 -right-5  bg-purple-400 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                                {totalItems}
+                            </span>
+                        )}
+                    </div>
+
+
                 </Link>
             </Menu>
         </div>

@@ -40,26 +40,29 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
+  --shadow-input:
+    0px 2px 3px -1px rgba(0, 0, 0, 0.1),
+    0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
+
   @keyframes scroll {
     to {
       transform: translate(calc(-50% - 0.5rem));
     }
   }
 
---radius-sm: calc(var(--radius) - 4px);
+  --radius-sm: calc(var(--radius) - 4px);
 
   --radius-md: calc(var(--radius) - 2px);
 
   --radius-lg: var(--radius);
 
   --radius-xl: calc(var(--radius) + 4px) */
-} 
-
-
-
- @theme inline {
-
 }
+
+
+
+@theme inline {}
 
 @keyframes spotlight {
   0% {
@@ -145,7 +148,7 @@
   --sidebar-ring: oklch(0.556 0 0);
 
 }
- 
+
 @layer base {
 
 
