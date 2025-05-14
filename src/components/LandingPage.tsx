@@ -53,7 +53,7 @@ const LandingPage = () => {
 
                 <TypewriterEffectSmooth words={words} />
                 <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
-                    <button onClick={()=>{router.push('/joinus')}} className="w-40 h-10 rounded-2xl bg-black border dark:border-white border-transparent text-white text-sm">
+                    <button onClick={()=>{router.push('/login')}} className="w-40 h-10 rounded-2xl bg-black border dark:border-white border-transparent text-white text-sm">
                         Join now
                     </button>
                     <button onClick={handel} className="w-40 h-10 rounded-2xl bg-white  text-black border border-red  text-sm">
