@@ -4,7 +4,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 
-import ConditionalNavbar from "@/components/ConditionalNavbar";
 import { StoreProvider } from "@/context/StoreContext";
 import { CartProvider } from "@/context/CartContext";
 
@@ -39,9 +38,9 @@ export default function RootLayout({
           <CartProvider>
 
             <div className="w-full flex flex-col min-h-screen">
-              <ConditionalNavbar />
-              <main className="flex-grow w-full">
 
+                {/* <ConditionalNavbar /> */}
+              <main className="flex-grow w-full">
                 {children}</main>
             </div>
           </CartProvider>
