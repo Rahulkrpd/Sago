@@ -3,11 +3,7 @@ import React from "react";
 import { Label } from "../../components/ui/label"
 import { Input } from "../../components/ui/input"
 import { cn } from "@/lib/utils";
-import {
-    
-    IconBrandGoogle,
-   
-} from "@tabler/icons-react";
+import {IconBrandGoogle,} from "@tabler/icons-react";
 import { redirect } from "next/navigation";
 
 
@@ -49,14 +45,23 @@ const SignupFormDemo = () => {
 
 
     return (
-        <div className=" border-2 border-sky-500 mt-20 shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+        <div className=" border-2 border-sky-500 mt-10 shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
             <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
                 Welcome to Sago
             </h2>
-
+            
 
             <form className="my-8" onSubmit={handleSubmit}>
-
+                <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+                    <LabelInputContainer>
+                        <Label htmlFor="firstname">First name</Label>
+                        <Input id="firstname" name="firstname" placeholder="Tyler" type="text" />
+                    </LabelInputContainer>
+                    <LabelInputContainer>
+                        <Label htmlFor="lastname">Last name</Label>
+                        <Input id="lastname" name="lastname" placeholder="Durden" type="text" />
+                    </LabelInputContainer>
+                </div>
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="email">Email Address</Label>
                     <Input id="email" name="email" placeholder="projectmayhem@fc.com" type="email" />
@@ -91,11 +96,11 @@ const SignupFormDemo = () => {
                     </button>
 
                     <p className="text-sm text-center text-gray-700 dark:text-gray-300 mt-4">
-                        Don&apos;t have an account?
+                        Already have an account?
                         <button onClick={(e) => {
                             e.preventDefault()
-                            redirect('/register')
-                        }} className="text-blue-500 hover:underline mx-1">Register here</button>
+                            redirect('/login')
+                        }} className="text-blue-500 hover:underline mx-1">Login here</button>
                     </p>
 
                 </div>
