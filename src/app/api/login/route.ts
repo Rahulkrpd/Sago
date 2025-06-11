@@ -1,54 +1,60 @@
 import dbConnect from "@/lib/db";
 import User from "@/model/user.model";
-import bcrypt from "bcrypt"
-
-
+import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 
 export async function POST(request: Request) {
-    await dbConnect()
+    await dbConnect();
 
     try {
-        const { firstname, lastname, email, password } = await request.json()
+        const { email, password } = await request.json();
 
-        const existUser = await User.findOne({
-            firstname,
-            email
-        })
+        const normalizedEmail = email.toLowerCase().trim();
+        const existUser = await User.findOne({ email: normalizedEmail });
 
-        if (existUser) {
-            return Response.json({ sucess: false, message: "User already  exist" })
+        if (!existUser) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "User does not exist",
+                },
+                { status: 404 }
+            );
         }
 
-        const hashPasword = await bcrypt.hash(password, 10)
+        const isValidUser = await bcrypt.compare(password, existUser.password);
 
-        const newUser = new User({
-            firstname,
-            lastname,
-            email,
-            password: hashPasword,
+        if (!isValidUser) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Password is incorrect",
+                },
+                { status: 401 } 
+            );
+        }
 
-        })
-
-        await newUser.save()
-
-
-        return Response.json({
-            success: true,
-            message: "User registered successfully. Please verify your email"
-        }, {
-            status: 201
-        })
-
+        return NextResponse.json(
+            {
+                success: true,
+                message: "User logged in successfully.",
+                user: {
+                    id: existUser._id,
+                    firstname: existUser.firstname,
+                    lastname: existUser.lastname,
+                    email: existUser.email,
+                },
+            },
+            { status: 200 }
+        );
     } catch (error) {
-        console.log(error)
-        return Response.json(
+        return NextResponse.json(
             {
                 success: false,
-                messaga: "Error in sign-up route"
-            }, {
-            status: 500
-        }
-        )
-
+                message: "Error in login route",
+                error,
+            },
+            { status: 500 }
+        );
     }
 }
