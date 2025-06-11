@@ -2,10 +2,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 
 import { StoreProvider } from "@/context/StoreContext";
 import { CartProvider } from "@/context/CartContext";
+
 
 
 
@@ -39,7 +41,16 @@ export default function RootLayout({
 
             <div className="w-full flex flex-col min-h-screen">
 
-                {/* <ConditionalNavbar /> */}
+              {/* <ConditionalNavbar /> */}
+              <Toaster position="top-right" toastOptions={{
+                style: {
+                  background: '#333',
+                  color: '#fff',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  fontSize: '14px',
+                }
+              }} />
               <main className="flex-grow w-full">
                 {children}</main>
             </div>
