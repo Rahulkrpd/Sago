@@ -1,10 +1,11 @@
-import NextAuth from 'next-auth'
+import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
 import clientPromise from '@/lib/mongodb'
+import type { AuthOptions } from 'next-auth/'
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
     adapter: MongoDBAdapter(clientPromise),
     providers: [
         CredentialsProvider({
@@ -15,11 +16,7 @@ const handler = NextAuth({
             },
             async authorize(credentials) {
                 try {
-                    console.log('[authorize()] credentials', credentials)
-
-                    // ✅ Base URL fallback
                     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-
                     const res = await fetch(`${baseUrl}/api/auth/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -28,8 +25,6 @@ const handler = NextAuth({
                     })
 
                     const user = await res.json()
-                    
-
                     if (!res.ok || !user?.email || !user?.id) return null
 
                     return {
@@ -67,15 +62,16 @@ const handler = NextAuth({
                     ...session.user,
                     id: token.sub || token.id,
                     email: token.email,
-                    name: token.name,
-                };
+                    name: token.name
+                }
             }
-            return session;
+            return session
         }
     },
     pages: {
         signIn: '/auth/signin'
     }
-})
+}
 
+const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST }
