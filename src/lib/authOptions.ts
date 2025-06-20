@@ -1,74 +1,73 @@
 // src/lib/authOptions.ts
-import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
-import clientPromise from './mongodb'
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import clientPromise from "./mongodb";
 import type { NextAuthOptions } from "next-auth";
-
 
 export const authOptions: NextAuthOptions = {
     adapter: MongoDBAdapter(clientPromise),
     providers: [
         CredentialsProvider({
-            name: 'Credentials',
+            name: "Credentials",
             credentials: {
-                email: { label: 'Email', type: 'text' },
-                password: { label: 'Password', type: 'password' }
+                email: { label: "Email", type: "text" },
+                password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
                 try {
-                    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+                    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
                     const res = await fetch(`${baseUrl}/api/auth/login`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(credentials),
-                        cache: 'no-store'
-                    })
+                        cache: "no-store",
+                    });
 
-                    const user = await res.json()
-                    if (!res.ok || !user?.email || !user?.id) return null
+                    const user = await res.json();
+                    if (!res.ok || !user?.email || !user?.id) return null;
 
                     return {
                         id: user.id,
                         email: user.email,
-                        name: user.name ?? ''
-                    }
+                        name: user.name ?? "",
+                    };
                 } catch (err) {
-                    console.error('[authorize()] ERROR', err)
-                    return null
+                    console.error("[authorize()] ERROR", err);
+                    return null;
                 }
-            }
+            },
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!
-        })
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
     ],
     session: {
-        strategy: 'jwt'
+        strategy: "jwt",
     },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id
-                token.email = user.email
-                token.name = user.name
+                token.id = user.id; // Set custom ID
+                token.email = user.email;
+                token.name = user.name;
             }
-            return token
+            return token;
         },
         async session({ session, token }) {
             if (session.user) {
                 session.user = {
                     ...session.user,
-                    id: token.sub || token.id,
-                    email: token.email,
-                    name: token.name
-                }
+                    id: (token.id || token.sub) as string, // Use id or sub, assert as string
+                    email: token.email ?? null,
+                    name: token.name ?? null,
+                };
             }
-            return session
-        }
+            return session;
+        },
     },
     pages: {
-        signIn: '/auth/signin'
-    }
-}
+        signIn: "/auth/signin",
+    },
+};
