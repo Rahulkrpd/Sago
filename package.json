@@ -16,6 +16,7 @@
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.8.1",
+    "@types/next-auth": "^3.15.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
@@ -41,6 +42,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   }
 }
