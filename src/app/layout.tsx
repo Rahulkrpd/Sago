@@ -1,5 +1,4 @@
-
-import type { Metadata } from "next";
+"use client"
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
@@ -7,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 
 import { StoreProvider } from "@/context/StoreContext";
 import { CartProvider } from "@/context/CartContext";
-
+import { SessionProvider as NextAuthProvider } from 'next-auth/react'
 
 
 
@@ -21,10 +20,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "SAGO",
-  description: "Sago ecommerce website",
-};
+
 
 export default function RootLayout({
   children,
@@ -36,30 +32,35 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-full min-h-screen bg-background text-foreground`}
       >
-        <StoreProvider>
-          <CartProvider>
+        <NextAuthProvider>
+          <StoreProvider>
+            <CartProvider>
+              <div className="w-full flex flex-col min-h-screen">
 
-            <div className="w-full flex flex-col min-h-screen">
+                {/* Navbar is now covered */}
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    style: {
+                      background: '#333',
+                      color: '#fff',
+                      borderRadius: '10px',
+                      padding: '16px',
+                      fontSize: '14px',
+                    },
+                  }}
+                />
 
-              {/* <ConditionalNavbar /> */}
-              <Toaster position="top-right" toastOptions={{
-                style: {
-                  background: '#333',
-                  color: '#fff',
-                  borderRadius: '10px',
-                  padding: '16px',
-                  fontSize: '14px',
-                }
-              }} />
-              <main className="flex-grow w-full">
-                {children}</main>
-            </div>
-          </CartProvider>
-        </StoreProvider>
+                <main className="flex-grow w-full">
+                  {children}
+                </main>
 
-
-
+              </div>
+            </CartProvider>
+          </StoreProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );
 }
+
