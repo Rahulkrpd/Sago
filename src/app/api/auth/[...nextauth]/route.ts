@@ -62,10 +62,15 @@ const handler = NextAuth({
             return token
         },
         async session({ session, token }) {
-            session.user.id = token.sub || token.id
-            session.user.email = token.email
-            session.user.name = token.name
-            return session
+            if (session.user) {
+                session.user = {
+                    ...session.user,
+                    id: token.sub || token.id,
+                    email: token.email,
+                    name: token.name,
+                };
+            }
+            return session;
         }
     },
     pages: {
