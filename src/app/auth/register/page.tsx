@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import React from 'react'
 
 export default function RegisterPage() {
     const [form, setForm] = useState({
@@ -9,7 +10,7 @@ export default function RegisterPage() {
     })
     const router = useRouter()
 
-    const handleRegister = async (e: any) => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const res = await fetch('/api/auth/register', {
             method: 'POST',
