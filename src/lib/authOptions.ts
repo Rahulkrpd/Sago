@@ -3,9 +3,10 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
 import clientPromise from './mongodb'
-import type { AuthOptions } from "next-auth"
+import type { NextAuthConfig } from "next-auth"
 
-export const authOptions: AuthOptions = {
+
+export const authOptions: NextAuthConfig = {
     adapter: MongoDBAdapter(clientPromise),
     providers: [
         CredentialsProvider({
