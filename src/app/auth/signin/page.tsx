@@ -7,7 +7,7 @@ export default function SignInPage() {
     const [form, setForm] = useState({ email: '', password: '' })
     const router = useRouter()
 
-    const handleLogin = async (e:  React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const res = await signIn('credentials', {
             redirect: false,
@@ -47,11 +47,18 @@ export default function SignInPage() {
                 <button className="w-full bg-blue-600 text-white p-2 rounded">Login</button>
             </form>
             <button
-                onClick={() => signIn('google',{ callbackUrl: '/home' })}
+                onClick={() => signIn('google', { callbackUrl: '/home' })}
                 className="w-full mt-4 bg-red-500 text-white p-2 rounded"
             >
                 Sign in with Google
             </button>
+            <p className="text-sm text-center text-gray-700 dark:text-gray-300 mt-4">
+                Already have an account?
+                <button onClick={(e) => {
+                    e.preventDefault()
+                    router.push('/auth/register')
+                }} className="text-blue-500 hover:underline mx-1">Register here</button>
+            </p>
         </div>
     )
 }

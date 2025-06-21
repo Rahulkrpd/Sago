@@ -46,7 +46,7 @@ function Navbar({ className }: { className?: string }) {
                 </Link>
                 {
                     !session?.user &&
-                    <Link href={"/auth/register"}>
+                    <Link href={"/auth/signin"}>
                         <MenuItem setActive={setActive} active={active} item="login" />
                     </Link>
                 }

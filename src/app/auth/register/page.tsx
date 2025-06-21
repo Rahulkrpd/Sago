@@ -33,7 +33,7 @@ export default function RegisterPage() {
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-black rounded shadow">
-            <h2 className="text-2xl font-semibold mb-4">Register</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-center">Register</h2>
             <form onSubmit={handleRegister} className="space-y-4">
                 <input className="w-full border p-2" placeholder="First Name" required
                     onChange={e => setForm({ ...form, firstname: e.target.value })} />
