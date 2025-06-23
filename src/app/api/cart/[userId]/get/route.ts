@@ -3,9 +3,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/lib/db'
 import User from '@/model/user.model'
 
-export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
     await dbConnect()
-    const user = await User.findById(params.userId).populate('cart.productId')
+    const { userId } = await params
+    const user = await User.findById(userId).populate('cart.productId')
 
     if (!user) return NextResponse.json({ message: 'User not found' }, { status: 404 })
 
