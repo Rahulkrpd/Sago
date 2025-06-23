@@ -2,8 +2,9 @@ import dbConnect from "@/lib/db"
 import User, { User as UserType } from "@/model/user.model"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function POST(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
     await dbConnect()
+    const { userId } = await params
 
     let body
     try {
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
 
     const { productId, quantity } = body
 
-    const user = await User.findById(params.userId)
+    const user = await User.findById(userId)
     if (!user) return NextResponse.json({ message: "User not found" }, { status: 404 })
 
     const itemIndex = user.cart.findIndex((item: UserType['cart'][0]) =>
