@@ -1,12 +1,12 @@
-// src/app/api/cart/[userId]/route.ts (or src/app/api/cart/[userId]/get/route.ts)
+// src/app/api/cart/[userId]/get/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/model/user.model';
 
-export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function GET(req: NextRequest, context: { params: { userId: string } }) {
     try {
         await dbConnect();
-        const { userId } = params;
+        const { userId } = context.params;
 
         const user = await User.findById(userId).populate('cart.productId');
         if (!user) {
