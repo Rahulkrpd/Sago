@@ -1,72 +1,65 @@
-"use client"
-import {  createContext,useContext, useState, ReactNode, useEffect } from 'react'
-import type { Product } from './StoreContext'
+// src/context/CartContext.tsx
+'use client'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { useSession } from 'next-auth/react'
+import { ProductDocumnet } from '@/model/Product'
 
+export interface CartItem extends ProductDocumnet {
 
-export interface CartItem extends Product {
-    quantity: number
+    _id: string; // MongoDB ID for the cart item
+    productId: ProductDocumnet; // Nested product details
+    quantity: number;
 }
 
-interface CartContextType {
-    items: CartItem[]
-    addToCart: (p: Product) => void
-    removeFromCart: (id: number) => void
-    updateQuantity: (id: number, delta: number) => void // +1 or -1
-    clearCart: () => void
+type CartContextType = {
+    cart: CartItem[]
     totalItems: number
-    totalPrice: number
+    addToCart: (productId: string, quantity?: number) => void
+    refreshCart: () => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
-export function useCart() {
-    const ctx = useContext(CartContext)
-    if (!ctx) throw new Error('useCart must be inside CartProvider')
-    return ctx
-}
+export function CartProvider({ children }: { children: React.ReactNode }) {
+    const { data: session } = useSession()
+    const [cart, setCart] = useState<CartItem[]>([])
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
-    const [items, setItems] = useState<CartItem[]>([])
+    const totalItems = cart?.reduce((acc, item) => acc + item.quantity, 0) ?? 0;
 
-    // Load cart from localStorage
-    useEffect(() => {
-        const cached = localStorage.getItem('cart')
-        if (cached) setItems(JSON.parse(cached))
-    }, [])
 
-    // Persist cart
-    useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(items))
-    }, [items])
 
-    const addToCart = (p: Product) => {
-        setItems(prev => {
-            const exists = prev.find(i => i.id === p.id)
-            if (exists) return prev.map(i => i.id === p.id ? { ...i, quantity: i.quantity + 1 } : i)
-            return [...prev, { ...p, quantity: 1 }]
+    const refreshCart = useCallback(async () => {
+        if (!session?.user?.id) return
+        const res = await fetch(`/api/cart/${session.user.id}/get`)
+        const data = await res.json()
+        setCart(data.cart)
+    }, [session?.user?.id])
+
+    const addToCart = async (productId: string, quantity: number = 1) => {
+        if (!session?.user?.id) return
+        await fetch(`/api/cart/${session.user.id}/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId, quantity })
         })
+        refreshCart()
     }
 
-    const updateQuantity = (id: number, delta: number) => {
-        setItems(prev => {
-            return prev
-                .map(i => i.id === id ? { ...i, quantity: Math.max(1, i.quantity + delta) } : i)
-                .filter(i => i.quantity > 0)
-        })
-    }
-
-    const removeFromCart = (id: number) => {
-        setItems(prev => prev.filter(i => i.id !== id))
-    }
-
-    const clearCart = () => setItems([])
-
-    const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
-    const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
+    useEffect(() => {
+        if (session?.user?.id) {
+            refreshCart()
+        }
+    }, [session?.user?.id, refreshCart])
 
     return (
-        <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice }}>
+        <CartContext.Provider value={{ cart, totalItems, addToCart, refreshCart }}>
             {children}
         </CartContext.Provider>
     )
+}
+
+export const useCart = () => {
+    const context = useContext(CartContext)
+    if (!context) throw new Error('useCart must be used inside CartProvider')
+    return context
 }

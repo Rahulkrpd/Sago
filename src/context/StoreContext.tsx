@@ -8,8 +8,9 @@ import React, {
     useMemo,
 } from "react"
 
+
 export interface Product {
-    id: number
+    _id: number
     title: string
     price: number
     description: string
@@ -50,14 +51,16 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const cached = localStorage.getItem("products")
         if (cached) {
-            setProducts(JSON.parse(cached))
+            // setProducts(JSON.parse(cached))
             setLoading(false)
         } else {
-            fetch("https://fakestoreapi.com/products")
+            // fetch("https://fakestoreapi.com/products")
+            fetch('api/product/get')
                 .then((res) => res.json())
                 .then((data) => {
-                    setProducts(data)
-                    localStorage.setItem("products", JSON.stringify(data))
+                    setProducts(data.data)
+
+                    // localStorage.setItem("products", JSON.stringify(data))
                 })
                 .catch(() => setError("Failed to load products"))
                 .finally(() => setLoading(false))

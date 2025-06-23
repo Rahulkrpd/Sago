@@ -6,16 +6,9 @@ import { useRouter } from "next/navigation"
 import { useStore } from "@/context/StoreContext"
 import { useCart } from "@/context/CartContext"
 import toast from "react-hot-toast"
+import {Product} from "@/context/StoreContext"
 
-interface Product {
-    id: number
-    title: string
-    price: number
-    description: string
-    category: string
-    image: string
-    rating: { rate: number; count: number }
-}
+
 
 const ProductPage = () => {
     const router = useRouter()
@@ -26,9 +19,9 @@ const ProductPage = () => {
         router.push(`/product/${productId}`)
     }
 
-    const handleAddToCart = (e: React.MouseEvent, product: Product) => {
-        e.stopPropagation()
-        addToCart(product)
+    const handleAddToCart = (product: Product) => {
+
+        addToCart(product._id.toString(), 1)
         toast.success(`${product.title} added to cart`)
     }
 
@@ -46,9 +39,9 @@ const ProductPage = () => {
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
                 {products.map((product: Product) => (
                     <div
-                        key={product.id}
+                        key={product._id}
                         className="flex justify-center cursor-pointer"
-                        onClick={() => handleCardClick(product.id)}
+                        onClick={() => handleCardClick(product._id)}
                     >
                         <BackgroundGradient className="w-[320px] h-[500px] rounded-[22px] p-4 sm:p-6 bg-white dark:bg-zinc-900 flex flex-col justify-between">
                             <Image
@@ -67,7 +60,7 @@ const ProductPage = () => {
 
                             <button
                                 className="rounded-full px-4 py-2 text-white flex justify-center items-center space-x-2 bg-black mt-4 text-xs font-bold dark:bg-zinc-800 mb-2 hover:bg-purple-400 cursor-pointer"
-                                onClick={(e) => handleAddToCart(e, product)}
+                                onClick={() => handleAddToCart(product)}
                             >
                                 <span>Add to Cart</span>
                             </button>
