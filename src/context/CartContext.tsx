@@ -30,7 +30,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const refreshCart = useCallback(async () => {
         if (!session?.user?.id) return
-        const res = await fetch(`/api/cart/${session.user.id}/get`)
+        const res = await fetch(`/api/cart/${session.user.id}`)
         const data = await res.json()
         setCart(data.cart)
     }, [session?.user?.id])
