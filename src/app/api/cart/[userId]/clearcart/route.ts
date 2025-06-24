@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
     req: NextRequest,
-    { params }: { params: { userId: string } } // id, not userId; string, not number
+    { params }: { params: Promise<{ userId: string }> } // id, not userId; string, not number
 ) {
 
 
