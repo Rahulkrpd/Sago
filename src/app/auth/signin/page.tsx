@@ -15,7 +15,6 @@ export default function SignInPage() {
             password: form.password
         })
 
-        console.log('frontend result  signIn result:', res)
 
         if (res?.status == 200) {
 

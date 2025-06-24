@@ -55,10 +55,11 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
             setLoading(false)
         } else {
             // fetch("https://fakestoreapi.com/products")
-            fetch('api/product/get')
+            fetch("/api/product/get")
                 .then((res) => res.json())
                 .then((data) => {
                     setProducts(data.data)
+                    console.log(products)
 
                     // localStorage.setItem("products", JSON.stringify(data))
                 })

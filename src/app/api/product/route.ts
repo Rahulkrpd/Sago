@@ -1,6 +1,29 @@
 import dbConnect from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
 import Product from "@/model/Product";
+import { NextRequest, NextResponse } from "next/server";
+
+
+
+export async function GET() {
+
+    await dbConnect()
+
+    try {
+
+        const data = await Product.find({})
+
+        if (data) {
+            return NextResponse.json({ "message": "Product data", data }, { status: 200 })
+        }
+    } catch (error) {
+
+        return NextResponse.json({ message: "Failed to load data", error }, { status: 404 })
+    }
+}
+
+
+
+
 
 
 export async function POST(req: NextRequest) {
@@ -10,12 +33,6 @@ export async function POST(req: NextRequest) {
         const { title, price, description, category, image, rating } = await req.json()
 
 
-        // if (!title || !price |) {
-        //     return NextResponse.json(
-        //         { message: 'Title and price are required' },
-        //         { status: 400 }
-        //     )
-        // }
 
         if (!title || !price || !description || !category || !image || !rating) {
             return new Response(

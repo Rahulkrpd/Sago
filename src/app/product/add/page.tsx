@@ -29,7 +29,7 @@ const AddProduct = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const res = await fetch("/api/product/add", {
+        const res = await fetch("/api/product/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

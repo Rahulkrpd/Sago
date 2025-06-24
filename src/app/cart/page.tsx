@@ -3,25 +3,44 @@ import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+
+
 
 export default function CartPage() {
-    const { cart, totalItems } = useCart();
+    const { cart, totalItems, clearCart } = useCart();
+    const { data: session } = useSession()
+
+    const handleClearCart = async () => {
+        if (!session?.user.id) {
+            alert("Please log in to clear the cart");
+            return;
+        }
+
+        try {
+            await clearCart(session.user.id);
+            alert("Cart cleared successfully");
+        } catch (error) {
+            alert(`Failed to clear cart ${error}`);
+
+        }
+    };
 
     if (totalItems === 0) {
 
-        return(
+        return (
 
-        <div className="w-full min-h-screen border-4 border-red-800 flex justify-center items-center">
-            <section className="p-8 text-center" aria-label="Empty cart message">
-                <p className="text-lg text-gray-600 mb-4">Your cart is empty.</p>
-                <Link
-                    href="/home"
-                    className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                    Shop Now
-                </Link>
-            </section>
-        </div>)
+            <div className="w-full min-h-screen  flex justify-center items-center">
+                <section className="p-8 text-center" aria-label="Empty cart message">
+                    <p className="text-lg text-gray-600 mb-4">Your cart is empty.</p>
+                    <Link
+                        href="/home"
+                        className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        Shop Now
+                    </Link>
+                </section>
+            </div>)
     }
 
 
@@ -34,9 +53,7 @@ export default function CartPage() {
         // Implement logic
     };
 
-    const clearCart = () => {
-        // Implement logic
-    };
+
 
     return (
         <>
@@ -52,8 +69,8 @@ export default function CartPage() {
                         >
                             {item.productId.image ? (
                                 <Image
-                                    src={item.productId.image} // Access image from productId
-                                    alt={item.productId.title} // Access title from productId
+                                    src={item.productId.image}
+                                    alt={item.productId.title}
                                     width={80}
                                     height={80}
                                     className="w-20 h-20 object-contain"
@@ -68,14 +85,14 @@ export default function CartPage() {
                                 <p>${item.productId.price} each</p>
                                 <div className="mt-2 flex items-center space-x-2">
                                     <button
-                                        onClick={() => updateQuantity(item._id, -1)} // Use item._id
+                                        onClick={() => updateQuantity()} // Use item._id
                                         className="px-2 py-1 bg-gray-200 rounded text-blue-700"
                                     >
                                         -
                                     </button>
                                     <span>{item.quantity}</span>
                                     <button
-                                        onClick={() => updateQuantity(item._id, +1)} // Use item._id
+                                        onClick={() => updateQuantity()} // Use item._id
                                         className="px-2 py-1 bg-gray-200 rounded text-red-800"
                                     >
                                         +
@@ -87,7 +104,7 @@ export default function CartPage() {
                                     Total: ${(item.productId.price * item.quantity).toFixed(2)}
                                 </p>
                                 <button
-                                    onClick={() => removeFromCart(item._id)} // Use item._id
+                                    onClick={() => removeFromCart()} // Use item._id
                                     className="text-red-600 hover:underline mt-2"
                                 >
                                     Remove
@@ -98,7 +115,7 @@ export default function CartPage() {
                 </div>
 
                 <div className="mt-6 flex justify-between items-center">
-                    <button onClick={clearCart} className="text-red-600 hover:underline">
+                    <button onClick={() => handleClearCart()} className="text-red-600 hover:underline">
                         Clear Cart
                     </button>
                     <div className="text-xl font-bold">
