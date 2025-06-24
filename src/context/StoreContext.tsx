@@ -51,10 +51,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const cached = localStorage.getItem("products")
         if (cached) {
-            // setProducts(JSON.parse(cached))
             setLoading(false)
         } else {
-            // fetch("https://fakestoreapi.com/products")
             fetch("api/product/get")
                 .then((res) => res.json())
                 .then((data) => {
