@@ -4,14 +4,16 @@ import User from "@/model/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import { Product } from "@/context/StoreContext";
 
-export async function POST(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function POST(
+    req: NextRequest,
+    { params }: { params: Promise<{ userId: string }> } // Use Promise for params
+) {
     try {
-        // Connect to the database
         await dbConnect();
 
-        // Get userId from params (await required)
-        const userId = params.userId
 
+        const { userId } = await params;
+        console.log("userId:", userId);
         // Parse request body
         const { productId } = await req.json();
 

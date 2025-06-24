@@ -12,8 +12,8 @@ export async function POST(
     try {
         await dbConnect();
 
-        const userId = await params; // Corrected variable
-        console.log(userId)
+        const { userId } = await params;
+    console.log("userId:", userId);
         const existUser = await User.findById(userId);
 
         if (!existUser) {
