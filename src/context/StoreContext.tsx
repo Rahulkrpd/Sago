@@ -22,7 +22,7 @@ export interface Product {
 interface StoreContextType {
     products: Product[]
     filtered: Product[]
-    categories: string[]
+
     selectedCategory: string
     setSelectedCategory: (c: string) => void
     searchQuery: string
@@ -68,10 +68,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [])
 
-    const categories = useMemo(
-        () => Array.from(new Set(products.map((p) => p.category))),
-        [products]
-    )
+
 
     const filtered = useMemo(() => {
         return products.filter(
@@ -86,7 +83,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
             value={{
                 products,
                 filtered,
-                categories,
+
                 selectedCategory,
                 setSelectedCategory,
                 searchQuery,
