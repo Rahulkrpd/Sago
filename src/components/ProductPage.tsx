@@ -25,7 +25,7 @@ const ProductPage = () => {
         toast.success(`${product.title} added to cart`)
     }
 
-    console.log(products)
+    // console.log(products)
 
     return (
         <div className="py-12 bg-gray-900" id="product">
@@ -39,7 +39,10 @@ const ProductPage = () => {
             </div>
 
             {!products || products.length === 0 ? (
-                <Loading />
+                <div className="w-full flex mt-10  gap-10 justify-center">
+                    <span className="text-2xl">Loading Products.... </span>   <Loading />
+                </div>
+
             ) : (
                 <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
                     {products.map((product: Product) => (
@@ -54,7 +57,8 @@ const ProductPage = () => {
                                     alt={product.title}
                                     height={200}
                                     width={200}
-                                    className="object-contain mx-auto  "
+                                    className="object-contain mx-auto w-auto h-auto"
+                                    
                                 />
 
                                 <div className="flex-1 mt-4">

@@ -59,7 +59,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
                 .then((res) => res.json())
                 .then((data) => {
                     setProducts(data.data)
-                    console.log(products)
+                    // console.log(products)
 
                     // localStorage.setItem("products", JSON.stringify(data))
                 })
