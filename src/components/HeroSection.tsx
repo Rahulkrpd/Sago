@@ -20,7 +20,7 @@ function HeroSection() {
                 >
                     Sago is your premier online destination for stylish, high-quality products that enhance your everyday life. Our carefully curated selection features everything from fashionable apparel and accessories to innovative home goods and tech essentials, all designed with both aesthetics and functionality in mind.</p>
                 <div className="mt-4">
-                    <Link href={"/courses"}>
+                    <Link href={"#"}>
                         <Button
                             borderRadius="1.75rem"
                             className="bg-white dark:bg-black text-black dark:text-white border-neutral-200 dark:border-slate-800"
