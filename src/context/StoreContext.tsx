@@ -56,6 +56,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
             fetch("api/product/get")
                 .then((res) => res.json())
                 .then((data) => {
+                    console.log(data)
                     setProducts(data.data)
                     // console.log(products)
 
