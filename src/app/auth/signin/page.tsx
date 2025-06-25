@@ -2,13 +2,16 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Loading from '@/components/Loading'
 
 export default function SignInPage() {
     const [form, setForm] = useState({ email: '', password: '' })
     const router = useRouter()
+    const [loading, setLoading] = useState(false)
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setLoading(true)
         const res = await signIn('credentials', {
             redirect: false,
             email: form.email,
@@ -18,10 +21,12 @@ export default function SignInPage() {
 
         if (res?.status == 200) {
 
-            router.push('/home') // or '/'
+            router.push('/home')
+            setLoading(false)
 
         } else {
             alert('Invalid credentials')
+            setLoading(false)
         }
     }
 
@@ -43,7 +48,8 @@ export default function SignInPage() {
                     required
                     onChange={e => setForm({ ...form, password: e.target.value })}
                 />
-                <button className="w-full bg-blue-600 text-white p-2 rounded">Login</button>
+                <button className="w-full bg-blue-600 text-white p-2 rounded cursor-pointer hover:bg-blue-800 transition-colors duration-200"><span className='flex justify-center gap-4 w-full hover:font-bold'>Login {loading && <Loading  />} </span></button>
+
             </form>
             <button
                 onClick={() => signIn('google', { callbackUrl: '/home' })}

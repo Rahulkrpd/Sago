@@ -6,14 +6,11 @@ export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ userId: string }> } // id, not userId; string, not number
 ) {
-
-
-
     try {
         await dbConnect();
 
         const { userId } = await params;
-    console.log("userId:", userId);
+        console.log("userId:", userId);
         const existUser = await User.findById(userId);
 
         if (!existUser) {

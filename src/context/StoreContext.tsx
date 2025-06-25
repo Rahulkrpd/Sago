@@ -56,11 +56,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
             fetch("api/product/get")
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log(data)
                     setProducts(data.data)
-                    // console.log(products)
 
-                    // localStorage.setItem("products", JSON.stringify(data))
                 })
                 .catch(() => setError("Failed to load products"))
                 .finally(() => setLoading(false))

@@ -3,27 +3,15 @@ import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-
 
 
 export default function CartPage() {
     const { cart, totalItems, clearCart } = useCart();
-    const { data: session } = useSession()
+
 
     const handleClearCart = async () => {
-        if (!session?.user.id) {
-            alert("Please log in to clear the cart");
-            return;
-        }
 
-        try {
-            await clearCart(session.user.id);
-            alert("Cart cleared successfully");
-        } catch (error) {
-            alert(`Failed to clear cart ${error}`);
-
-        }
+        await clearCart()
     };
 
     if (totalItems === 0) {
