@@ -113,6 +113,10 @@
 }
 
 
+button{
+  cursor: pointer;
+}
+
 
 .dark {
   --background: oklch(0.145 0 0);

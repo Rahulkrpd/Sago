@@ -10,7 +10,7 @@ function SogoContactUs() {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log('Submitted:', { email, message });
+        alert('Submitted:');
     };
 
     return (

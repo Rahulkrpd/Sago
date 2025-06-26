@@ -3,10 +3,14 @@ import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+
 
 
 export default function CartPage() {
-    const { cart, totalItems, clearCart } = useCart();
+    const { cart, totalItems, clearCart, setCart } = useCart();
+    const { data: session } = useSession();
+
 
 
     const handleClearCart = async () => {
@@ -32,13 +36,56 @@ export default function CartPage() {
     }
 
 
+    const updateQuantity = async (productId: string) => {
 
-    const updateQuantity = () => {
-        // Implement logic
+        const res = await fetch(`/api/cart/${session?.user.id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            setCart(data.cart);
+        } else {
+            alert(data.message);
+        }
     };
 
-    const removeFromCart = () => {
-        // Implement logic
+    const decreaseQuantity = async (productId: string) => {
+        const res = await fetch(`/api/cart/${session?.user.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            setCart(data.cart);
+        } else {
+            alert(data.message);
+        }
+    }
+
+
+
+
+    const removeFromCart = async (productId: string) => {
+        const res = await fetch(`/api/cart/${session?.user.id}/remove`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            setCart(data.cart);
+        } else {
+            alert(data.message);
+        }
     };
 
 
@@ -52,7 +99,7 @@ export default function CartPage() {
                 <div className="space-y-4">
                     {cart.map((item) => (
                         <div
-                            key={item._id} // Use item._id instead of item.id
+                            key={item._id}
                             className="flex items-center space-x-4 border p-4 rounded"
                         >
                             {item.productId.image ? (
@@ -73,15 +120,17 @@ export default function CartPage() {
                                 <p>${item.productId.price} each</p>
                                 <div className="mt-2 flex items-center space-x-2">
                                     <button
-                                        onClick={() => updateQuantity()} // Use item._id
-                                        className="px-2 py-1 bg-gray-200 rounded text-blue-700"
+                                        type="button"
+                                        onClick={() => decreaseQuantity(item.productId._id as string)}
+                                        className="px-2 py-1 bg-gray-200 rounded text-blue-700 "
                                     >
                                         -
                                     </button>
                                     <span>{item.quantity}</span>
                                     <button
-                                        onClick={() => updateQuantity()} // Use item._id
-                                        className="px-2 py-1 bg-gray-200 rounded text-red-800"
+                                        type="button"
+                                        onClick={() => updateQuantity(item.productId._id as string)}
+                                        className="px-2 py-1 bg-gray-200 rounded text-red-800 "
                                     >
                                         +
                                     </button>
@@ -92,8 +141,8 @@ export default function CartPage() {
                                     Total: ${(item.productId.price * item.quantity).toFixed(2)}
                                 </p>
                                 <button
-                                    onClick={() => removeFromCart()} // Use item._id
-                                    className="text-red-600 hover:underline mt-2"
+                                    onClick={() => removeFromCart(item.productId._id as string)}
+                                    className="text-red-600 hover:underline mt-2 "
                                 >
                                     Remove
                                 </button>

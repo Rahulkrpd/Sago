@@ -1,8 +1,14 @@
 import dbConnect from "@/lib/db";
-import ProductModel from "@/model/Product";
+import Product from "@/model/Product";
 import User from "@/model/user.model";
 import { NextRequest, NextResponse } from "next/server";
-import { Product } from "@/context/StoreContext";
+import mongoose from "mongoose";
+
+
+interface CartItem {
+    productId: mongoose.Types.ObjectId;
+    quantity: number;
+}
 
 export async function POST(
     req: NextRequest,
@@ -13,11 +19,9 @@ export async function POST(
 
 
         const { userId } = await params;
-        console.log("userId:", userId);
-        // Parse request body
+
         const { productId } = await req.json();
 
-        // Validate inputs
         if (!userId || !productId) {
             return NextResponse.json(
                 { message: "userId and productId are required" },
@@ -25,7 +29,6 @@ export async function POST(
             );
         }
 
-        // Find user
         const userExist = await User.findById(userId);
         if (!userExist) {
             return NextResponse.json(
@@ -34,8 +37,8 @@ export async function POST(
             );
         }
 
-        // Find product
-        const productExist = await ProductModel.findById(productId);
+
+        const productExist = await Product.findById(productId);
         if (!productExist) {
             return NextResponse.json(
                 { message: "Product not found" },
@@ -43,27 +46,28 @@ export async function POST(
             );
         }
 
-        // Remove product from cart (compare _id as strings)
-        userExist.cart = userExist.cart.filter(
-            (item: Product) => item._id.toString() !== productId
-        );
 
-        // Save updated user
+        userExist.cart = userExist.cart = userExist.cart.filter((item: CartItem) => item.productId.toString() !== productId);
+
+
         await userExist.save();
+
+        const updatedUser = await User.findById(userId).populate("cart.productId");
+
 
         return NextResponse.json(
             {
                 message: "Product removed from cart",
-                cart: userExist.cart,
+                cart: updatedUser.cart,
             },
             { status: 200 }
         );
     } catch (error) {
-        // Log error for debugging
-        console.error("Error removing product from cart:", error);
+
+        
 
         return NextResponse.json(
-            { message: "Failed to remove product due to internal server error" },
+            { message: "Failed to remove product due to internal server error",error },
             { status: 500 }
         );
     }

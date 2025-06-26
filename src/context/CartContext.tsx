@@ -28,6 +28,7 @@ interface CartContextType {
     clearCart: () => Promise<void>;
     loading: boolean; // Added for UI feedback
     error: string | null; // Added for error feedback
+    setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -71,7 +72,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 const data = await response.json();
                 setCart(Array.isArray(data.cart) ? data.cart : []);
             } catch (err) {
-                console.error("Error fetching cart:", err);
+                alert(`Error fetching cart: ${err}`);
                 setError("Failed to load cart. Please try again.");
                 setCart([]);
             } finally {
@@ -101,7 +102,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             const data = await response.json();
             setCart(Array.isArray(data.cart) ? data.cart : []);
         } catch (err) {
-            console.error("Error refreshing cart:", err);
+            alert(`Error refreshing cart:${err}`);
             setError("Failed to refresh cart. Please try again.");
             setCart([]);
         } finally {
@@ -128,7 +129,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             }
             await refreshCart();
         } catch (err) {
-            console.error("Error adding to cart:", err);
+            alert(`Error adding to cart: ${err}`);
             setError("Failed to add item to cart. Please try again.");
         } finally {
             setLoading(false);
@@ -154,7 +155,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             }
             await refreshCart();
         } catch (err) {
-            console.error("Error removing from cart:", err);
+            alert(`Error removing from cart: ${err}`);
             setError("Failed to remove item from cart. Please try again.");
         } finally {
             setLoading(false);
@@ -184,7 +185,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             }
             await refreshCart();
         } catch (err) {
-            console.error("Error updating quantity:", err);
+            alert(`Error updating quantity  ${err} `);
             setError("Failed to update quantity. Please try again.");
         } finally {
             setLoading(false);
@@ -210,10 +211,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
             }
 
             setCart([]);
-            console.log(response)
+
             router.push('/home')
         } catch (err) {
-            console.error("Error clearing cart:", err);
+            alert(`Error clearing cart ${err} `);
             setError("Failed to clear cart. Please try again.");
         } finally {
             setLoading(false);
@@ -233,6 +234,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 clearCart,
                 loading,
                 error,
+                setCart
             }}
         >
             {children}

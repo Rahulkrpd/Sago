@@ -10,7 +10,7 @@ export async function POST(
         await dbConnect();
 
         const { userId } = await params;
-        console.log("userId:", userId);
+        
         const existUser = await User.findById(userId);
 
         if (!existUser) {
