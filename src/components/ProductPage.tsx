@@ -55,8 +55,8 @@ const ProductPage = () => {
                                 <Image
                                     src={product.image}
                                     alt={product.title}
-                                    height={200}
-                                    width={200}
+                                    height={180}
+                                    width={180}
                                     className="object-contain mx-auto w-auto h-auto"
                                     
                                 />
@@ -74,7 +74,7 @@ const ProductPage = () => {
                                         handleAddToCart(product);
                                     }}
                                 >
-                                    <span>Add to Cart</span>
+                                    <span> 🛒 Add to Cart</span>
                                 </button>
                             </BackgroundGradient>
                         </div>

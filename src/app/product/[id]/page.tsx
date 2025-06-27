@@ -1,15 +1,25 @@
 "use client"
 
-import React,{use} from 'react'
+import React, { use } from 'react'
 import Image from 'next/image'
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card"
 import { useStore, Product } from '@/context/StoreContext'
+import { useCart } from '@/context/CartContext'
+import toast from "react-hot-toast"
 
 export default function ProductDetails({ params }: { params: Promise<{ id: string }> }) {
     const { products } = useStore()
-    const { id } = use(params) // ✅ Unwrap Promise using React.use()
+    const { id } = use(params)
+    const { addToCart } = useCart()
 
     const product = products.find((item: Product) => item._id.toString() === id)
+
+    const handleAddToCart = () => {
+        if (!product) return;
+        addToCart(id, 1);
+        toast.success(`${product.title} added to cart`);
+    }
+
 
 
     if (!product) {
@@ -55,6 +65,17 @@ export default function ProductDetails({ params }: { params: Promise<{ id: strin
                             <CardItem translateZ="20" className="text-sm text-gray-500 mt-2">
                                 ⭐ {product.rating.rate} ({product.rating.count} reviews)
                             </CardItem>
+
+
+                            <button
+                                onClick={handleAddToCart}
+                                className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition duration-200"
+                            >
+                                🛒 Add to Cart
+                            </button>
+
+
+
                         </div>
                     </div>
                 </CardBody>

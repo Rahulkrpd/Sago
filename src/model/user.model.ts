@@ -5,13 +5,15 @@ export interface User extends Document {
     lastname: string
     email: string
     password: string
+    googleId: string
     cart: {
         productId: mongoose.Types.ObjectId
         quantity: number
     }[]
+    
 }
 
-const userSchema: Schema<User> = new Schema({
+const userSchema = new Schema<User>({
     firstname: {
         type: String,
         required: true,
@@ -29,6 +31,7 @@ const userSchema: Schema<User> = new Schema({
         type: String,
         required: true,
     },
+    googleId: { type: String },
     cart: [
         {
             productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },

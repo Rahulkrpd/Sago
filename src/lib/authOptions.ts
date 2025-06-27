@@ -8,7 +8,6 @@ import User from "@/model/user.model";
 import mongoose from "mongoose";
 import type { Profile as NextAuthProfile } from "next-auth";
 
-// Extend the Profile type for Google
 interface GoogleProfile extends NextAuthProfile {
     given_name?: string;
     family_name?: string;
@@ -60,35 +59,37 @@ export const authOptions: NextAuthOptions = {
             if (account?.provider === "google") {
                 try {
                     await mongoose.connect(process.env.MONGODB_URI as string);
-                    let dbUser = await User.findOne({ email: user.email });
+                    const dbUser = await User.findOne({ email: user.email });
 
                     const googleProfile = profile as GoogleProfile;
 
-                    if (!dbUser) {
-                        // Create new user for Google login
-                        dbUser = new User({
-                            _id: new mongoose.Types.ObjectId(),
-                            email: user.email,
-                            firstname: googleProfile?.given_name || "Google",
-                            lastname: googleProfile?.family_name || "User",
-                            password: null, // Google users don't have passwords
-                            cart: [],
-                        });
-                        await dbUser.save();
-                    } else {
-                        // Link Google account if email exists (handle OAuthAccountNotLinked)
+                    if (dbUser) {
+                        // User exists, update googleId if not already set
                         if (!dbUser.googleId) {
                             dbUser.googleId = account.providerAccountId;
                             await dbUser.save();
                         }
+                        // Proceed to login
+                        user.id = dbUser._id.toString();
+                        return true;
                     }
 
-                    // Set user.id for session
-                    user.id = dbUser._id.toString();
+                    // User does not exist, create new user
+                    const newUser = new User({
+                        _id: new mongoose.Types.ObjectId(),
+                        email: user.email,
+                        firstname: googleProfile?.given_name || "Google",
+                        lastname: googleProfile?.family_name || "User",
+                        password: "N/A", // Google users don't need a password
+                        googleId: account.providerAccountId,
+                        cart: [],
+                    });
+                    await newUser.save();
+                    user.id = newUser._id.toString();
                     return true;
                 } catch (err) {
                     console.error("Google signIn error:", err);
-                    return "/auth/signin?error=AccountLinkFailed";
+                    return "/auth/signin?error=ServerError";
                 }
             }
             return true;
@@ -113,7 +114,6 @@ export const authOptions: NextAuthOptions = {
             return session;
         },
         async redirect({ url, baseUrl }) {
-            // Redirect to /home after successful login
             if (url.includes("/auth/signin")) {
                 return `${baseUrl}/home`;
             }
@@ -122,6 +122,5 @@ export const authOptions: NextAuthOptions = {
     },
     pages: {
         signIn: "/auth/signin",
-
     },
 };
