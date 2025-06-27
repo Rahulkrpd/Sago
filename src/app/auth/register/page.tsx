@@ -12,7 +12,7 @@ export default function RegisterPage() {
 
     const router = useRouter();
     const [formLoading, setFormLoading] = useState(false);
-    const [googleLoading, setGoogleLoading] = useState(false);
+    // const [googleLoading, setGoogleLoading] = useState(false);
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -39,10 +39,10 @@ export default function RegisterPage() {
         }
     };
 
-    const handleGoogleSignIn = async () => {
+  /*   const handleGoogleSignIn = async () => {
         setGoogleLoading(true);
         await signIn('google', { callbackUrl: '/home' });
-    };
+    }; */
 
     return (
         <div className="max-w-md mx-auto mt-20 p-6 bg-black rounded-2xl border-sky-800 border-2 shadow">
@@ -66,13 +66,13 @@ export default function RegisterPage() {
                 </button>
             </form>
 
-            <button
+          {/*   <button
                 onClick={handleGoogleSignIn}
                 disabled={googleLoading}
                 className="w-full mt-4 flex justify-center items-center gap-2 bg-red-500 text-white p-2 rounded hover:font-bold"
             >
                 {googleLoading ? <Loading /> : 'Sign up with Google'}
-            </button>
+            </button> */}
 
             <p className="text-sm text-center text-gray-300 mt-4">
                 Already have an account?
