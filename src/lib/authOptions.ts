@@ -1,8 +1,8 @@
 // src/lib/authOptions.ts
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from "./mongodb";
+// import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+// import clientPromise from "./mongodb";
 import type { NextAuthOptions } from "next-auth";
 import User from "@/model/user.model";
 import mongoose from "mongoose";
@@ -14,7 +14,7 @@ interface GoogleProfile extends NextAuthProfile {
 }
 
 export const authOptions: NextAuthOptions = {
-    adapter: MongoDBAdapter(clientPromise),
+    // adapter: MongoDBAdapter(clientPromise),
     providers: [
         CredentialsProvider({
             name: "Credentials",

@@ -8,7 +8,7 @@ export default function SignInPage() {
     const [form, setForm] = useState({ email: '', password: '' })
     const router = useRouter()
     const [loginLoading, setLoginLoading] = useState(false)
-    // const [googleLoading, setGoogleLoading] = useState(false)
+    const [googleLoading, setGoogleLoading] = useState(false)
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -29,12 +29,12 @@ export default function SignInPage() {
         setLoginLoading(false)
     }
 
-  /*   const handleGoogleLogin = async () => {
+    const handleGoogleLogin = async () => {
         setGoogleLoading(true)
         await signIn('google', { callbackUrl: '/home' })
         // No need to setGoogleLoading(false) because it redirects
     }
- */
+
     return (
         <div className="max-w-md mx-auto mt-20 p-6 bg-black rounded-2xl border-sky-800 border-2 shadow">
             <h2 className="text-2xl font-semibold mb-4 text-center text-white">Sign In</h2>
@@ -63,14 +63,14 @@ export default function SignInPage() {
                 </button>
             </form>
 
-           {/*  <button
+            <button
                 onClick={handleGoogleLogin}
                 disabled={googleLoading}
                 className="w-full mt-4 bg-red-500 text-white p-2 rounded flex justify-center items-center gap-2"
             >
                 {googleLoading ? <Loading /> : 'Sign in with Google'}
             </button>
- */}
+
             <p className="text-sm text-center text-gray-300 mt-4">
                 Don&apos;t have an account?
                 <button

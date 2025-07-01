@@ -13,9 +13,10 @@ function Navbar({ className }: { className?: string }) {
 
     const getInitials = (name?: string) => {
         if (!name) return ''
-        const words = name.trim().split(' ')
+        const words = name.trim().split(' ') || []
         const first = words[0]?.[0] || ''
         const last = words[1]?.[0] || ''
+        console.log(first, last)
         return (first + last).toUpperCase()
     }
 
@@ -56,8 +57,9 @@ function Navbar({ className }: { className?: string }) {
                 {session?.user?.name && (
                     <div className="ml-4 relative group">
                         {/* Avatar */}
-                        <div className="flex items-center justify-center w-9 h-9 bg-purple-600 text-white rounded-full font-semibold text-sm cursor-pointer">
+                        <div className="flex items-center  justify-center w-9 h-9 bg-purple-600 text-white rounded-full font-semibold text-sm cursor-pointer">
                             {getInitials(session.user.name)}
+                           
                         </div>
 
                         {/* Logout button (shown on hover) */}
