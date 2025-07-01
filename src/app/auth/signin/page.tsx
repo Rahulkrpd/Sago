@@ -36,53 +36,61 @@ export default function SignInPage() {
     }
 
     return (
-        <div className="max-w-md mx-auto mt-20 p-6 bg-black rounded-2xl border-sky-800 border-2 shadow">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-white">Sign In</h2>
+        <>
+            <div className="max-w-md mx-auto mt-20 p-6 bg-black rounded-2xl border-sky-800 border-2 shadow">
+                <h2 className="text-2xl font-semibold mb-4 text-center text-white">Sign In</h2>
 
-            <form onSubmit={handleLogin} className="space-y-4">
-                <input
-                    className="w-full border p-2"
-                    placeholder="Email"
-                    type="email"
-                    required
-                    onChange={e => setForm({ ...form, email: e.target.value })}
-                />
-                <input
-                    className="w-full border p-2"
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={e => setForm({ ...form, password: e.target.value })}
-                />
+                <form onSubmit={handleLogin} className="space-y-4">
+                    <input
+                        className="w-full border p-2"
+                        placeholder="Email"
+                        type="email"
+                        required
+                        onChange={e => setForm({ ...form, email: e.target.value })}
+                    />
+                    <input
+                        className="w-full border p-2"
+                        placeholder="Password"
+                        type="password"
+                        required
+                        onChange={e => setForm({ ...form, password: e.target.value })}
+                    />
+                    <button
+                        type="submit"
+                        disabled={loginLoading}
+                        className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-800 transition-colors duration-200 flex justify-center items-center gap-2"
+                    >
+                        {loginLoading ? <Loading /> : 'Login'}
+                    </button>
+                </form>
+
                 <button
-                    type="submit"
-                    disabled={loginLoading}
-                    className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-800 transition-colors duration-200 flex justify-center items-center gap-2"
+                    onClick={handleGoogleLogin}
+                    disabled={googleLoading}
+                    className="w-full mt-4 bg-red-500 text-white p-2 rounded flex justify-center items-center gap-2"
                 >
-                    {loginLoading ? <Loading /> : 'Login'}
+                    {googleLoading ? <Loading /> : 'Sign in with Google'}
                 </button>
-            </form>
 
-            <button
-                onClick={handleGoogleLogin}
-                disabled={googleLoading}
-                className="w-full mt-4 bg-red-500 text-white p-2 rounded flex justify-center items-center gap-2"
-            >
-                {googleLoading ? <Loading /> : 'Sign in with Google'}
-            </button>
+                <p className="text-sm text-center text-gray-300 mt-4">
+                    Don&apos;t have an account?
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault()
+                            router.push('/auth/register')
+                        }}
+                        className="text-blue-500 hover:underline mx-1"
+                    >
+                        Register here
+                    </button>
+                </p>
+            </div>
 
-            <p className="text-sm text-center text-gray-300 mt-4">
-                Don&apos;t have an account?
-                <button
-                    onClick={(e) => {
-                        e.preventDefault()
-                        router.push('/auth/register')
-                    }}
-                    className="text-blue-500 hover:underline mx-1"
-                >
-                    Register here
-                </button>
-            </p>
-        </div>
+
+            <footer className='fixed bottom-0 left-0 right-0 bg-black text-white p-4 text-center'>
+                <p>© {new Date().getFullYear()} Build with ❤️ by <a href="https://github.com/Rahulkrpd/Sago" className='text-blue-500 hover:underline'>Rahul</a></p>
+            </footer>
+
+        </>
     )
 }
